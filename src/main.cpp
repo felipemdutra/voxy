@@ -1,7 +1,8 @@
 #include <memory>
 #include <wrapgl/wrapgl.h>
-
 #include <GLFW/glfw3.h>
+
+#include "Chunk.h"
 
 using namespace wgl;
 using namespace std;
@@ -9,17 +10,8 @@ using namespace std;
 constexpr int kWindowWidth  = 800;
 constexpr int kWindowHeight = 600;
 
-VertexLayout layout;
-
-VertexLayout& GetGlobalDefaultVertexLayout() {
-        return layout;
-}
-
 int main()
 {
-        layout.AddAttr(0, kPosition, 3, GL_FLOAT, false);
-        layout.AddAttr(1, kColor, 3, GL_FLOAT, true);
-
         auto window = Window(kWindowWidth, kWindowHeight, "Voxy Engine");
 
         auto renderer = Renderer();
@@ -40,9 +32,16 @@ int main()
                 1000.0f
                 );
 
+        camera.SetPosition(glm::vec3(8.0f, 16.0f, 30.0f));
+
+        Chunk chunk;
+
         while (!window.ShouldClose()) {
                 renderer.Clear(0.2f, 0.4f, 1.0f, 1.0f, true);
-                
+                camera.Update();
+
+                chunk.Render(renderer);
+
                 window.SwapBuffers();
                 glfwPollEvents();
         }
